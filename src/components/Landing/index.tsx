@@ -16,9 +16,10 @@ import styles from './Landing.module.css';
 
 interface LandingProps {
   onStartCall: (roomId?: string) => void;
+  onShowProfile?: () => void;
 }
 
-export const Landing = ({ onStartCall }: LandingProps) => {
+export const Landing = ({ onStartCall, onShowProfile }: LandingProps) => {
   const [joinRoomId, setJoinRoomId] = useState('');
   const [showCameraTest, setShowCameraTest] = useState(false);
 
@@ -96,6 +97,7 @@ export const Landing = ({ onStartCall }: LandingProps) => {
         onHelpClick={handleHelpClick}
         onSettingsClick={handleSettingsClick}
         onLoginClick={handleLoginClick}
+        onProfileClick={onShowProfile}
       />
       
       <div className={styles.content}>

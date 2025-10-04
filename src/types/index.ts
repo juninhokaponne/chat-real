@@ -24,3 +24,20 @@ export interface VideoChatState {
   mediaState: MediaState;
   roomId: string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  createdAt?: string;
+  lastActive?: string;
+}
+
+export type Theme = 'light' | 'dark' | 'system';
+
+export interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  actualTheme: 'light' | 'dark';
+}

@@ -4,6 +4,8 @@
   position: relative;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 .roomInfo {
@@ -20,6 +22,12 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* Dark theme room info */
+[data-theme="dark"] .roomInfo {
+  background: rgba(31, 41, 55, 0.9);
+  border: 1px solid rgba(75, 85, 99, 0.5);
 }
 
 .connectionStatus {
@@ -152,4 +160,14 @@
 .backButton:hover {
   background: rgba(0, 0, 0, 0.9);
   transform: scale(1.05);
+}
+
+/* Dark theme back button */
+[data-theme="dark"] .backButton {
+  background: rgba(31, 41, 55, 0.9);
+  border: 1px solid rgba(75, 85, 99, 0.5);
+}
+
+[data-theme="dark"] .backButton:hover {
+  background: rgba(55, 65, 81, 0.9);
 }
