@@ -6,17 +6,20 @@ import {
   MdHelpOutline,
   MdKeyboardArrowDown,
   MdMenu,
-  MdClose
+  MdClose,
+  MdPerson
 } from 'react-icons/md';
+import { ThemeToggle } from '../ThemeToggle';
 import styles from './Header.module.css';
 
 interface HeaderProps {
   onHelpClick?: () => void;
   onSettingsClick?: () => void;
   onLoginClick?: () => void;
+  onProfileClick?: () => void;
 }
 
-export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderProps) => {
+export const Header = ({ onHelpClick, onSettingsClick, onLoginClick, onProfileClick }: HeaderProps) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   
@@ -57,6 +60,13 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
     }
   };
 
+  const handleProfile = () => {
+    if (onProfileClick) {
+      onProfileClick();
+    }
+    setShowUserMenu(false);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -70,6 +80,8 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
         {/* Desktop Navigation */}
         <nav className={styles.nav}>
           <div className={styles.navItems}>
+            <ThemeToggle />
+            
             <button 
               className={styles.helpButton}
               onClick={handleHelp}
@@ -113,6 +125,10 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                         </div>
                       </div>
                       <hr className={styles.dropdownDivider} />
+                      <button className={styles.dropdownItem} onClick={handleProfile}>
+                        <MdPerson size={18} />
+                        View Profile
+                      </button>
                       <button className={styles.dropdownItem} onClick={handleSettings}>
                         <MdSettings size={18} />
                         Settings
@@ -154,6 +170,10 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
         {showMobileMenu && (
           <div className={styles.mobileMenu}>
             <div className={styles.mobileMenuItems}>
+              <div className={styles.mobileThemeToggle}>
+                <ThemeToggle />
+              </div>
+              
               <button className={styles.mobileMenuItem} onClick={handleHelp}>
                 <MdHelpOutline size={20} />
                 Help & Support
@@ -173,6 +193,10 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                       <div className={styles.mobileUserEmail}>{user.email}</div>
                     </div>
                   </div>
+                  <button className={styles.mobileMenuItem} onClick={handleProfile}>
+                    <MdPerson size={20} />
+                    View Profile
+                  </button>
                   <button className={styles.mobileMenuItem} onClick={handleLogout}>
                     <MdLogin size={20} />
                     Sign Out
