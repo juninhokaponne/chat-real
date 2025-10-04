@@ -1,7 +1,18 @@
 .landing {
   min-height: 100vh;
-  background: linear-gradient(135deg, #764ba2 0%, #553C9A 100%);
+  background: var(--bg-primary);
   font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+/* Light theme gradient */
+[data-theme="light"] .landing {
+  background: linear-gradient(135deg, #764ba2 0%, #553C9A 100%);
+}
+
+/* Dark theme gradient */
+[data-theme="dark"] .landing {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
 }
 
 .content {
@@ -62,6 +73,13 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: transform 0.22s cubic-bezier(.2,.9,.2,1), box-shadow 0.22s ease;
   box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+}
+
+/* Dark theme feature cards */
+[data-theme="dark"] .feature {
+  background: rgba(55, 65, 81, 0.3);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
 .feature:hover {
@@ -155,6 +173,12 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   max-width: 420px;
   width: 100%;
+}
+
+/* Dark theme join room section */
+[data-theme="dark"] .joinRoomSection {
+  background: rgba(55, 65, 81, 0.2);
+  border: 1px solid rgba(75, 85, 99, 0.2);
 }
 
 .joinTitle {

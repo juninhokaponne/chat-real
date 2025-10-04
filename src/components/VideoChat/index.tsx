@@ -3,15 +3,17 @@ import { MdSync, MdCheckCircle, MdError, MdArrowBack } from 'react-icons/md';
 import { VideoContainer } from '../VideoContainer';
 import { Controls } from '../Controls';
 import { ShareButton } from '../ShareButton';
+import { Header } from '../Header';
 import { useVideoChat } from '../../hooks/useVideoChat';
 import styles from './VideoChat.module.css';
 
 interface VideoChatProps {
   roomId: string;
   onBackToLanding: () => void;
+  onShowProfile?: () => void;
 }
 
-export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
+export const VideoChat = ({ roomId, onBackToLanding, onShowProfile }: VideoChatProps) => {
   const [error, setError] = useState<string>('');
 
   const {
@@ -85,8 +87,27 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
 
   const status = getConnectionStatus();
 
+  const handleHelpClick = () => {
+    console.log('Help clicked');
+  };
+
+  const handleSettingsClick = () => {
+    console.log('Settings clicked');
+  };
+
+  const handleLoginClick = () => {
+    console.log('Login clicked');
+  };
+
   return (
     <div className={styles.videoChat}>
+      <Header 
+        onHelpClick={handleHelpClick}
+        onSettingsClick={handleSettingsClick}
+        onLoginClick={handleLoginClick}
+        onProfileClick={onShowProfile}
+      />
+      
       <button className={styles.backButton} onClick={onBackToLanding} title="Back to home">
         <MdArrowBack size={20} />
       </button>
