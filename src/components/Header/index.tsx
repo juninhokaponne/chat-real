@@ -8,6 +8,7 @@ import {
   MdMenu,
   MdClose
 } from 'react-icons/md';
+
 import styles from './Header.module.css';
 
 interface HeaderProps {
@@ -62,9 +63,21 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
       <div className={styles.container}>
         {/* Logo/Brand */}
         <div className={styles.brand}>
-          <h2 className={styles.logo} onClick={() => {
-            window.location.href = '/';
-          }}>Chat Real</h2>
+          <h2 
+            className={styles.logo} 
+            onClick={() => {
+              window.location.href = '/';
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                window.location.href = '/';
+              }
+            }}
+
+
+          >
+            Chat Real
+          </h2>
         </div>
 
         {/* Desktop Navigation */}
@@ -72,16 +85,16 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
           <div className={styles.navItems}>
             <button 
               className={styles.helpButton}
-              onClick={handleHelp}
               title="Help & Support"
+              onClick={handleHelp}
             >
               <MdHelpOutline size={20} />
             </button>
 
             <button 
               className={styles.settingsButton}
-              onClick={handleSettings}
               title="Settings"
+              onClick={handleSettings}
             >
               <MdSettings size={20} />
             </button>
@@ -98,8 +111,8 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                     <MdAccountCircle size={32} />
                     <span className={styles.userName}>{user.name}</span>
                     <MdKeyboardArrowDown 
-                      size={16} 
-                      className={`${styles.dropdownIcon} ${showUserMenu ? styles.rotated : ''}`}
+                      className={`${styles.dropdownIcon} ${showUserMenu ? styles.rotated : ''}`} 
+                      size={16}
                     />
                   </button>
 

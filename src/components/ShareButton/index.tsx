@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { MdContentCopy, MdCheck } from 'react-icons/md';
+
 import { shareRoomUrl } from '../../utils/roomUtils';
+
 import styles from './ShareButton.module.css';
 
 interface ShareButtonProps {
@@ -33,8 +35,8 @@ export const ShareButton = ({ roomId }: ShareButtonProps) => {
   return (
     <button 
       className={`${styles.shareButton} ${copied ? styles.copied : ''}`}
-      onClick={handleShare}
       title="Copy room link"
+      onClick={handleShare}
     >
       {copied ? (
         <>

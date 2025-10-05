@@ -9,9 +9,15 @@ import {
   MdArrowForward,
   MdAccessTime 
 } from 'react-icons/md';
+
 import { generateRoomId, isValidRoomId } from '../../utils/roomUtils';
+
+
+import { generateRoomId } from '../../utils/roomUtils';
+
 import { CameraTest } from '../CameraTest';
 import { Header } from '../Header';
+
 import styles from './Landing.module.css';
 
 interface LandingProps {
@@ -103,8 +109,8 @@ export const Landing = ({ onStartCall }: LandingProps) => {
     <div className={styles.landing}>
       <Header 
         onHelpClick={handleHelpClick}
-        onSettingsClick={handleSettingsClick}
         onLoginClick={handleLoginClick}
+        onSettingsClick={handleSettingsClick}
       />
       
       <div className={styles.content}>
@@ -118,7 +124,7 @@ export const Landing = ({ onStartCall }: LandingProps) => {
 
       <div className={styles.features}>
         {features.map((feature, index) => (
-          <div key={index} className={styles.feature}>
+          <div className={styles.feature} key={index}>
             <div className={styles.featureIcon}>
               {feature.icon}
             </div>
@@ -153,9 +159,9 @@ export const Landing = ({ onStartCall }: LandingProps) => {
       <div className={styles.joinRoomSection}>
         <h3 className={styles.joinTitle}>Join Existing Room</h3>
         <input
-          type="text"
           className={styles.joinInput}
           placeholder="Paste room ID here..."
+          type="text"
           value={joinRoomId}
           onChange={(e) => {
             setJoinRoomId(e.target.value);
@@ -167,8 +173,13 @@ export const Landing = ({ onStartCall }: LandingProps) => {
         {error && <p className={styles.error}>{error}</p>}
         <button
           className={styles.joinButton}
+
           onClick={handleJoinRoom}
           disabled={!joinRoomId.trim() || !!error}
+
+          disabled={!joinRoomId.trim()}
+          onClick={handleJoinRoom}
+
         >
           Join Room
         </button>

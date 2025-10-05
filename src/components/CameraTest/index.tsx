@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { MdClose, MdVideocam, MdVideocamOff, MdMic, MdMicOff } from 'react-icons/md';
+
 import styles from './CameraTest.module.css';
 
 interface CameraTestProps {
@@ -111,17 +112,17 @@ export const CameraTest = ({ onClose }: CameraTestProps) => {
         <div className={styles.videoPreview}>
           {stream ? (
             <video
-              ref={videoRef}
-              className={styles.video}
               autoPlay
               muted
               playsInline
+              className={styles.video}
+              ref={videoRef}
               style={{ display: videoEnabled ? 'block' : 'none' }}
             />
           ) : (
             <div className={styles.placeholder}>
               <MdVideocam size={48} />
-              <p>Click "Start Test" to test your camera</p>
+              <p>Click &quot;Start Test&quot; to test your camera</p>
             </div>
           )}
           
@@ -143,8 +144,8 @@ export const CameraTest = ({ onClose }: CameraTestProps) => {
           {!stream ? (
             <button 
               className={`${styles.controlButton} ${styles.primaryButton}`}
-              onClick={startTest}
               disabled={status === 'testing'}
+              onClick={startTest}
             >
               {status === 'testing' ? 'Testing...' : 'Start Test'}
             </button>

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import type { VideoChatState } from '../types';
+
 import { WebRTCService } from '../services/WebRTCService';
+
+import type { VideoChatState } from '../types';
 
 export const useVideoChat = (roomId: string) => {
   const [state, setState] = useState<VideoChatState>({

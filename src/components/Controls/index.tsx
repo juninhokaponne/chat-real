@@ -5,8 +5,10 @@ import {
   MdVideocamOff, 
   MdCallEnd 
 } from 'react-icons/md';
-import type { MediaState } from '../../types';
+
 import styles from './Controls.module.css';
+
+import type { MediaState } from '../../types';
 
 interface ControlsProps {
   mediaState: MediaState;
@@ -20,24 +22,24 @@ export const Controls = ({ mediaState, onToggleAudio, onToggleVideo, onEndCall }
     <div className={styles.controls}>
       <button 
         className={`${styles.controlButton} ${styles.audioButton} ${!mediaState.audio ? styles.muted : ''}`}
-        onClick={onToggleAudio}
         title={mediaState.audio ? 'Mutar microfone' : 'Ativar microfone'}
+        onClick={onToggleAudio}
       >
         {mediaState.audio ? <MdMic size={20} /> : <MdMicOff size={20} />}
       </button>
       
       <button 
         className={`${styles.controlButton} ${styles.videoButton} ${!mediaState.video ? styles.disabled : ''}`}
-        onClick={onToggleVideo}
         title={mediaState.video ? 'Desligar câmera' : 'Ligar câmera'}
+        onClick={onToggleVideo}
       >
         {mediaState.video ? <MdVideocam size={20} /> : <MdVideocamOff size={20} />}
       </button>
       
       <button 
         className={`${styles.controlButton} ${styles.endCallButton}`}
-        onClick={onEndCall}
         title="Encerrar chamada"
+        onClick={onEndCall}
       >
         <MdCallEnd size={20} />
       </button>

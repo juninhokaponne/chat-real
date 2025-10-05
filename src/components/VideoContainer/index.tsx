@@ -1,5 +1,6 @@
 import { useEffect, type RefObject } from 'react';
 import { MdVideocamOff, MdPerson } from 'react-icons/md';
+
 import styles from './VideoContainer.module.css';
 
 interface VideoContainerProps {
@@ -10,14 +11,14 @@ interface VideoContainerProps {
   mediaState: { audio: boolean; video: boolean };
 }
 
-export const VideoContainer = ({ 
-  localVideoRef, 
-  remoteVideoRef, 
-  isConnected, 
+export const VideoContainer = ({
+  localVideoRef,
+  remoteVideoRef,
+  isConnected,
   isConnecting,
-  mediaState 
+  mediaState
 }: VideoContainerProps) => {
-  
+
   useEffect(() => {
     if (localVideoRef.current && localVideoRef.current.srcObject) {
       localVideoRef.current.play().catch(console.error);
@@ -32,7 +33,7 @@ export const VideoContainer = ({
   if (isConnecting) {
     return (
       <div className={styles.connectingMessage}>
-        <div className={styles.spinner}></div>
+        <div className={styles.spinner} />
         <p>Connecting to video room...</p>
       </div>
     );
@@ -43,12 +44,12 @@ export const VideoContainer = ({
       {/* Vídeo Local */}
       <div className={`${styles.videoWrapper} ${styles.localVideo}`}>
         <video
-          ref={localVideoRef}
-          className={styles.video}
           autoPlay
           muted
           playsInline
+          className={styles.video}
           controls={false}
+          ref={localVideoRef}
           style={{ display: mediaState.video ? 'block' : 'none' }}
         />
         {!mediaState.video && (
@@ -63,34 +64,35 @@ export const VideoContainer = ({
 
       {/* Vídeo Remoto */}
       <div className={`${styles.videoWrapper} ${styles.remoteVideo}`}>
-        {isConnected ? (
+        {isConnected && remoteVideoRef.current?.srcObject ? (
           <video
-            ref={remoteVideoRef}
-            className={styles.video}
             autoPlay
             playsInline
+            className={styles.video}
+            ref={remoteVideoRef}
           />
         ) : (
           <div className={`${styles.placeholder} ${styles.remoteVideo}`}>
             <div style={{ textAlign: 'center' }}>
               <MdPerson size={64} style={{ marginBottom: '16px' }} />
-              <div style={{ 
-                fontSize: '16px', 
-                color: '#9ca3af',
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 500
-              }}>
+              <div
+                style={{
+                  fontSize: '16px',
+                  color: '#9ca3af',
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: 500,
+                }}
+              >
                 Waiting for another participant...
               </div>
             </div>
           </div>
         )}
-        {isConnected && (
-          <div className={styles.videoLabel}>
-            Participant
-          </div>
+        {isConnected && remoteVideoRef.current?.srcObject && (
+          <div className={styles.videoLabel}>Participant</div>
         )}
       </div>
+
     </div>
   );
 };
