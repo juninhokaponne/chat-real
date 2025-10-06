@@ -1,3 +1,4 @@
+
 .landing {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
@@ -193,6 +194,13 @@
 .joinInput:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.5);
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-bottom: 12px;
+  text-align: left;
 }
 
 .joinButton {
