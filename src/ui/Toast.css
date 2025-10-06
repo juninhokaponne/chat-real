@@ -1,0 +1,5 @@
+.toast-root{position:fixed;right:18px;top:18px;display:flex;flex-direction:column;gap:10px;z-index:12000}
+.toast{padding:10px 14px;border-radius:10px;color:#fff;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);box-shadow:0 8px 30px rgba(2,6,23,0.5);min-width:160px}
+.toast.success{background:linear-gradient(90deg,#2dd4bf,#60a5fa)}
+.toast.error{background:linear-gradient(90deg,#fb7185,#ef4444)}
+.toast.info{background:linear-gradient(90deg,#7c3aed,#4f46e5)}

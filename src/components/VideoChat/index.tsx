@@ -1,6 +1,7 @@
 import { MdSync, MdCheckCircle, MdError, MdArrowBack } from 'react-icons/md';
 
 import { useVideoChat } from '../../hooks/useVideoChat';
+import { useAuth } from '../../auth/AuthProvider';
 import { Controls } from '../Controls';
 import { ShareButton } from '../ShareButton';
 import { VideoContainer } from '../VideoContainer';
@@ -25,6 +26,10 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
     endCall,
     retryConnection
   } = useVideoChat(roomId);
+
+  // get user name from auth provider so local video label is correct
+  const auth = useAuth();
+  const userName = auth?.user?.displayName || auth?.user?.email;
 
   const handleEndCall = () => {
     endCall();
@@ -94,6 +99,7 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
         localVideoRef={localVideoRef}
         mediaState={mediaState}
         remoteVideoRef={remoteVideoRef}
+        userName={userName}
       />
 
       <Controls 
