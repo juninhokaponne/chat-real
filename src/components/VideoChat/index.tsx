@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { MdSync, MdCheckCircle, MdError, MdArrowBack } from 'react-icons/md';
 
 // Internal imports
+import { useAuth } from '../../auth/authContext';
 import ChatPanel from '../../components/chat/ChatPanel';
 import { useVideoChat } from '../../hooks/useVideoChat';
 import { Controls } from '../Controls';
@@ -24,16 +25,21 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
     isConnecting,
     mediaState,
     error,
-    toggleAudio,
-    toggleVideo,
-    endCall,
-    retryConnection,
+  toggleAudio,
+  toggleVideo,
+  endCall,
+  retryConnection,
     socket,
     username
   } = useVideoChat(roomId);
 
+  // Local chat UI state (chat driven by socket provided by hook)
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const toggleChat = () => setIsChatOpen(prev => !prev);
+  const toggleChat = () => setIsChatOpen((v) => !v);
+
+  // get user name from auth provider so local video label is correct
+  const auth = useAuth();
+  const userName = auth?.user?.displayName || auth?.user?.email;
 
   const handleEndCall = () => {
     endCall();
@@ -104,6 +110,7 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
         isConnected={isConnected}
         isConnecting={isConnecting}
         mediaState={mediaState}
+        userName={userName}
       />
 
       <Controls

@@ -1,0 +1,7 @@
+.container { position: fixed; right: 18px; top: 72px; background: white; border-radius: 12px; padding: 12px; box-shadow: 0 12px 36px rgba(2,6,23,0.2); width: 360px; z-index: 10010 }
+.header { font-weight: 700; margin-bottom: 8px }
+.body { display: flex; flex-direction: column; gap: 8px }
+.input { padding: 8px 10px; border-radius: 8px; border: 1px solid #e6eefb; font-size: 14px }
+.actions { display: flex; gap: 8px; justify-content: flex-end }
+.copyBtn { background: linear-gradient(90deg,#1e88ff,#6d5cff); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer }
+.closeBtn { background: transparent; border: none; color: #374151; padding: 8px 12px; border-radius: 8px; cursor: pointer }

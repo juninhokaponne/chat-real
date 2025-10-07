@@ -10,6 +10,7 @@ import {
   MdAccessTime 
 } from 'react-icons/md';
 
+import { useAuth } from '../../auth/authContext';
 import { generateRoomId } from '../../utils/roomUtils';
 import { CameraTest } from '../CameraTest';
 import { Header } from '../Header';
@@ -18,28 +19,60 @@ import styles from './Landing.module.css';
 
 interface LandingProps {
   onStartCall: (roomId?: string) => void;
+  onOpenAuth?: () => void;
+  isAuthenticated?: boolean;
+  user?: { name?: string; email?: string } | null;
+  onLogout?: () => void;
 }
 
-export const Landing = ({ onStartCall }: LandingProps) => {
+export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLogout }: LandingProps) => {
   const [joinRoomId, setJoinRoomId] = useState('');
   const [showCameraTest, setShowCameraTest] = useState(false);
+  const auth = useAuth();
 
   const handleCreateRoom = () => {
-    const roomId = generateRoomId();
-    onStartCall(roomId);
+    if (isAuthenticated) {
+      const roomId = generateRoomId();
+      onStartCall(roomId);
+      return;
+    }
+    // require auth before creating: register a post-auth callback to create room
+    if (auth?.registerPostAuth) {
+      auth.registerPostAuth(() => {
+        const roomId = generateRoomId();
+        onStartCall(roomId);
+      });
+    }
+    if (onOpenAuth) onOpenAuth();
   };
 
   const handleJoinRoom = () => {
-    if (joinRoomId.trim()) {
-      onStartCall(joinRoomId.trim());
+    if (!joinRoomId.trim()) return;
+    let final = joinRoomId.trim();
+    try {
+      // If user pasted a full URL, extract the room query param
+      const u = new URL(final);
+      const r = u.searchParams.get('room');
+      if (r) final = r;
+    } catch (_e) { /* ignore invalid URL */ }
+    if (isAuthenticated) {
+      onStartCall(final);
+      return;
     }
+    if (onOpenAuth) onOpenAuth();
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedText = e.clipboardData.getData('text');
     if (pastedText.trim()) {
       setTimeout(() => {
-        onStartCall(pastedText.trim());
+        let final = pastedText.trim();
+        try {
+          const u = new URL(final);
+          const r = u.searchParams.get('room');
+          if (r) final = r;
+        } catch (_e) { /* ignore invalid URL */ }
+        onStartCall(final);
       }, 100);
     }
   };
@@ -87,17 +120,17 @@ export const Landing = ({ onStartCall }: LandingProps) => {
     console.log('Settings clicked');
   };
 
-  const handleLoginClick = () => {
-    // TODO: Navigate to login page or open login modal
-    console.log('Login clicked');
-  };
+  // login is handled via Header -> onOpenAuth
 
   return (
     <div className={styles.landing}>
       <Header 
         onHelpClick={handleHelpClick}
-        onLoginClick={handleLoginClick}
+        onOpenAuth={onOpenAuth}
         onSettingsClick={handleSettingsClick}
+        onLogout={onLogout}
+        isLoggedIn={isAuthenticated}
+        user={auth?.user}
       />
       
       <div className={styles.content}>
