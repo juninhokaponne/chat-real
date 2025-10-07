@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from './AuthProvider';
-import { useToast } from '../ui/Toast';
-import { createPortal } from 'react-dom';
-import { SignIn } from './SignIn';
-import { SignUp } from './SignUp';
-import styles from './AuthCards.module.css';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+import { useToast } from '../ui/toastContext';
+
+import styles from './AuthCards.module.css';
+import { useAuth } from './authContext';
+import { SignIn } from './SignIn';
+import { SignUp } from './SignUp';
 
 // Clean, accessible modal using Radix Dialog + Framer Motion for entry/exit animations
 export const AuthCards: React.FC<{ onClose?: () => void; pushUrl?: boolean }> = ({ onClose, pushUrl = false }) => {
@@ -16,6 +18,20 @@ export const AuthCards: React.FC<{ onClose?: () => void; pushUrl?: boolean }> = 
   const firstFocusable = useRef<HTMLButtonElement | HTMLInputElement | null>(null);
   const previouslyFocused = useRef<Element | null>(null);
 
+  const toast = useToast();
+
+  const handleClose = React.useCallback(() => {
+    toast?.push?.('Closing dialog');
+    setOpen(false);
+    try {
+      if (onClose) {
+        onClose();
+      }
+    } catch (_e) {
+      // ignore; best-effort close
+    }
+  }, [onClose, toast]);
+
   useEffect(() => {
     previouslyFocused.current = document.activeElement;
     setTimeout(() => firstFocusable.current?.focus(), 10);
@@ -23,16 +39,24 @@ export const AuthCards: React.FC<{ onClose?: () => void; pushUrl?: boolean }> = 
     const path = showSignUp ? '/signup' : '/signin';
     // only push URL for deep-linked modals (pushUrl=true). In-app opens should not change the URL.
     if (pushUrl) {
-      try { window.history.pushState({ modal: true }, '', path); } catch {}
+      try {
+        window.history.pushState({ modal: true }, '', path);
+      } catch (_e) {
+        // ignore history push failures (e.g., sandboxed env)
+      }
     }
 
-    const onPop = () => { onClose && onClose(); };
+    const onPop = () => { if (onClose) onClose(); };
     window.addEventListener('popstate', onPop);
     return () => {
       window.removeEventListener('popstate', onPop);
-      try { (previouslyFocused.current as HTMLElement | null)?.focus?.(); } catch {}
+      try {
+        (previouslyFocused.current as HTMLElement | null)?.focus?.();
+      } catch (_e) {
+        // ignore focus restore errors
+      }
     };
-  }, [showSignUp, onClose]);
+  }, [showSignUp, onClose, pushUrl]);
 
   // auto-close when auth state indicates a logged in user (fallback)
   const { user } = useAuth();
@@ -41,18 +65,12 @@ export const AuthCards: React.FC<{ onClose?: () => void; pushUrl?: boolean }> = 
       console.debug('[AuthCards] detected user logged in — closing modal');
       handleClose();
     }
-  }, [user]);
+  }, [user, handleClose]);
 
-  const toast = useToast();
-  const handleClose = () => {
-    toast?.push?.('Closing dialog');
-    setOpen(false);
-    try { onClose && onClose(); } catch {}
-  };
 
   const [success, setSuccess] = useState(false);
 
-  const handleSuccess = () => {
+  const handleSuccess = React.useCallback(() => {
     // brief success state then close
     setSuccess(true);
     toast?.push?.('Success', 'success');
@@ -60,10 +78,10 @@ export const AuthCards: React.FC<{ onClose?: () => void; pushUrl?: boolean }> = 
       setSuccess(false);
       handleClose();
     }, 300);
-  };
+  }, [handleClose, toast]);
 
   return (
-    <Dialog.Root open={open} onOpenChange={(val) => { setOpen(val); if (!val) { try { onClose && onClose(); } catch {} } }}>
+  <Dialog.Root open={open} onOpenChange={(val) => { setOpen(val); if (!val) { try { if (onClose) { onClose(); } } catch (_e) { /* ignore */ } } }}>
       {(() => {
         // create or reuse a single modal root attached to the body. This avoids
         // creating duplicate DOM roots when the component mounts repeatedly.

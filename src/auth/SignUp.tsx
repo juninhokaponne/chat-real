@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { signup, setAccessToken } from './authService';
-import { useAuth } from './AuthProvider';
+
+import { useToast } from '../ui/toastContext';
+
 import styles from './AuthCards.module.css';
-import { useToast } from '../ui/Toast';
+import { useAuth } from './authContext';
+import { signup, setAccessToken } from './authService';
+
 
 export const SignUp: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
@@ -39,7 +42,12 @@ export const SignUp: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   setAccessToken((res as any).access_token);
   // assume server returns userId/displayName where available; fallback to email
   login((res as any).access_token, { email, displayName: displayName || email, userId: (res as any).userId });
-  try { toast?.push?.('Account created', 'success'); onSuccess && onSuccess(); } catch {}
+  try {
+        if (toast) toast.push('Account created', 'success');
+        if (onSuccess) onSuccess();
+      } catch (_e) {
+        // ignore toast push failures
+      }
       } else {
         setError('Unexpected server response');
         console.warn('signup unexpected response', res);

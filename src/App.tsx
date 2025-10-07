@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 
-import { Landing } from './components/Landing'
-import { Sessions } from './auth/Sessions'
 import AuthCards from './auth/AuthCards'
-import { VideoChat } from './components/VideoChat'
+import { AuthProvider } from './auth/AuthProvider'
+import { useAuth } from './auth/authContext'
+import { Sessions } from './auth/Sessions'
+import { Landing } from './components/Landing'
 import ShareRoom from './components/ShareRoom'
+import { VideoChat } from './components/VideoChat'
 import './App.css'
 
 function InnerApp() {

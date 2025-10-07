@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { signin, setAccessToken } from './authService';
-import { useAuth } from './AuthProvider';
+
+import { useToast } from '../ui/toastContext';
+
 import styles from './AuthCards.module.css';
-import { useToast } from '../ui/Toast';
+import { useAuth } from './authContext';
+import { signin, setAccessToken } from './authService';
+
 
 export const SignIn: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
@@ -32,7 +35,12 @@ export const SignIn: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   if ((res as any).refresh_token) sessionStorage.setItem('refresh_token', (res as any).refresh_token);
   // pass a richer user object so UI can display name/email
   login((res as any).access_token, { email, displayName: (res as any).displayName || email, userId: (res as any).userId });
-  try { toast?.push?.('Signed in successfully', 'success'); onSuccess && onSuccess(); } catch {}
+  try {
+      if (toast) toast.push('Signed in successfully', 'success');
+      if (onSuccess) onSuccess();
+    } catch (_e) {
+      // ignore toast failures
+    }
     } catch (err: any) {
       const msg = err?.response?.data?.message || err?.message || 'Sign in failed';
       setError(msg);

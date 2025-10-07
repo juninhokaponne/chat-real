@@ -1,9 +1,9 @@
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { randomBytes } from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +66,7 @@ export class AuthService {
     return { refresh_token: refreshToken, jti, expiresAt };
   }
 
-  async refresh(refreshToken: string) {
+  async refresh(_refreshToken: string) {
     // Find the user who has this refresh token
     // (simple approach: scan users collection for token — but we have verifyRefreshToken by userId, so expect client to supply userId too)
     // For simplicity, decode a small payload from token is not possible; instead, require userId + refreshToken in body in controller.

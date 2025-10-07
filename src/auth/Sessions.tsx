@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+
+import { useAuth } from './authContext';
 import { listSessions, revokeSession } from './authService';
-import { useAuth } from './AuthProvider';
 
 export const Sessions: React.FC<{ userId?: string; onClose?: () => void }> = ({ userId, onClose }) => {
   const { user } = useAuth();

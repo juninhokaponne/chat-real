@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { useState, useCallback } from 'react';
+
 import './Toast.css';
+import ToastContext, { useToast as useToastCtx } from './toastContext';
 
 type Toast = { id: number; message: string; type?: 'info' | 'success' | 'error' };
 
-const ToastContext = createContext<any>(null);
-
-export const useToast = () => useContext(ToastContext);
+export const useToast = () => useToastCtx();
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);

@@ -1,9 +1,10 @@
 import { Controller, Post, Body, UseGuards, Get, Req, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
-import { SignInDto } from './dto/signin.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+
+import { AuthService } from './auth.service';
+import { SignInDto } from './dto/signin.dto';
+import { SignUpDto } from './dto/signup.dto';
 
 class RefreshDto {
   userId: string;
@@ -22,10 +23,11 @@ export class AuthController {
       // create refresh token with deviceName on signup
       // Note: signup currently returns access token only; to persist deviceName for initial session we'd need user created info
       return out;
-    } catch (err) {
-      console.error('[auth][signup] error:', err?.message || err);
-      throw err;
+    } catch (_err) {
+      console.error('[auth][signup] error:', _err?.message || _err);
+      throw _err;
     }
+
   }
 
   @Post('signin')
@@ -42,9 +44,9 @@ export class AuthController {
         return res.status(200).json({ access_token: tokens.access_token, refresh_token: tokens.refresh_token });
       }
       return res.status(200).json({ access_token: tokens.access_token });
-    } catch (err) {
-      console.error('[auth][signin] error:', err?.message || err);
-      throw err;
+    } catch (_err) {
+      console.error('[auth][signin] error:', _err?.message || _err);
+      throw _err;
     }
   }
 
@@ -99,7 +101,7 @@ export class AuthController {
   // in non-production expose refresh_token in body for local testing convenience
   if (process.env.NODE_ENV !== 'production') payload.refresh_token = newRefresh.refresh_token;
   return res.json(payload);
-    } catch (err) {
+    } catch (_err) {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
   }
@@ -113,7 +115,7 @@ export class AuthController {
         if (decoded && decoded.jti && decoded.sub) {
           await (this as any).authService.usersService.removeRefreshToken(decoded.sub, decoded.jti);
         }
-      } catch (err) {
+      } catch (_err) {
         // ignore invalid token here; just clear cookie
       }
     }

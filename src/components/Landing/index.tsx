@@ -10,12 +10,12 @@ import {
   MdAccessTime 
 } from 'react-icons/md';
 
+import { useAuth } from '../../auth/authContext';
 import { generateRoomId } from '../../utils/roomUtils';
 import { CameraTest } from '../CameraTest';
 import { Header } from '../Header';
 
 import styles from './Landing.module.css';
-import { useAuth } from '../../auth/AuthProvider';
 
 interface LandingProps {
   onStartCall: (roomId?: string) => void;
@@ -54,7 +54,7 @@ export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLo
       const u = new URL(final);
       const r = u.searchParams.get('room');
       if (r) final = r;
-    } catch {}
+    } catch (_e) { /* ignore invalid URL */ }
     if (isAuthenticated) {
       onStartCall(final);
       return;
@@ -71,7 +71,7 @@ export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLo
           const u = new URL(final);
           const r = u.searchParams.get('room');
           if (r) final = r;
-        } catch {}
+        } catch (_e) { /* ignore invalid URL */ }
         onStartCall(final);
       }, 100);
     }

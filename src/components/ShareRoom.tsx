@@ -1,4 +1,5 @@
 import React from 'react';
+
 import styles from './ShareRoom.module.css';
 
 export const ShareRoom: React.FC<{ roomId: string; onClose?: () => void }> = ({ roomId, onClose }) => {
