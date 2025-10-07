@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { MdSync, MdCheckCircle, MdError, MdArrowBack } from 'react-icons/md';
 
 // Internal imports
-import ChatPanel from '../../components/chat/ChatPanel';
 import { useAuth } from '../../auth/authContext';
+import ChatPanel from '../../components/chat/ChatPanel';
 import { useVideoChat } from '../../hooks/useVideoChat';
 import { Controls } from '../Controls';
 import { ShareButton } from '../ShareButton';
