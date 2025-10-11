@@ -50,6 +50,7 @@ export class WebRTCService {
       try {
         console.log(`Attempt ${i + 1}:`, constraints[i]);
         this.localStream = await navigator.mediaDevices.getUserMedia(constraints[i]);
+        this.originalCamStream = this.localStream;
         
         // Stream obtained successfully
         
@@ -264,4 +265,23 @@ export class WebRTCService {
       track.readyState === 'live' && track.enabled
     );
   }
+
+  public originalCamStream: MediaStream | null = null;
+
+public async replaceVideoTrack(newStream: MediaStream) {
+  if (!this.peerConnection) return;
+
+  const newVideoTrack = newStream.getVideoTracks()[0];
+  if (!newVideoTrack) return;
+
+  const sender = this.peerConnection
+    .getSenders()
+    .find((s) => s.track && s.track.kind === 'video');
+
+  if (sender) {
+    await sender.replaceTrack(newVideoTrack);
+    this.localStream = newStream;
+    if (this.onLocalStream) this.onLocalStream(newStream);
+  }
+}
 }

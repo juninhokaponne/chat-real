@@ -7,6 +7,7 @@
   border-bottom: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-md);
   font-family: 'Inter', sans-serif;
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
 }
 
 .container {
@@ -28,7 +29,7 @@
 .logo {
   font-size: 24px;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--brand-400) 0%, var(--brand-600) 100%);
+  background: linear-gradient(135deg, var(--primary-500) 0%, #8b5cf6 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -71,7 +72,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #6b7280;
+  color: var(--muted);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -80,13 +81,13 @@
 
 .helpButton:hover,
 .settingsButton:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--surface-alt);
+  color: var(--muted-strong);
 }
 
 .loginButton {
-  background: linear-gradient(90deg,#06b6d4,#3b82f6);
-  color: white;
+  background: var(--gradient-primary);
+  color: #fff;
 }
 
 .loginButton:hover {
@@ -110,13 +111,13 @@
   border: none;
   border-radius: 12px;
   background: transparent;
-  color: #374151;
+  color: var(--muted-strong);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .profileButton:hover {
-  background: #f3f4f6;
+  background: var(--surface-alt);
 }
 
 .userName {
@@ -142,12 +143,13 @@
   top: calc(100% + 8px);
   right: 0;
   min-width: 260px;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--divider);
   border-radius: 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15), 0 4px 6px -2px rgba(0,0,0,0.08);
   padding: 8px;
   animation: fadeIn 0.15s ease-out;
+  transition: background-color .3s ease, border-color .3s ease;
 }
 
 @keyframes fadeIn {
@@ -166,7 +168,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
-  color: #374151;
+  color: var(--muted-strong);
 }
 
 .dropdownName {
@@ -177,12 +179,12 @@
 
 .dropdownEmail {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .dropdownDivider {
   border: none;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--divider);
   margin: 4px 0;
 }
 
@@ -195,7 +197,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #374151;
+  color: var(--muted-strong);
   font-size: 14px;
   text-align: left;
   cursor: pointer;
@@ -203,7 +205,7 @@
 }
 
 .dropdownItem:hover {
-  background: #f3f4f6;
+  background: var(--surface-alt);
 }
 
 /* Mobile Menu */
@@ -215,14 +217,14 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #6b7280;
+  color: var(--muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mobileMenuButton:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--surface-alt);
+  color: var(--muted-strong);
 }
 
 .mobileMenu {
@@ -230,13 +232,14 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--divider);
   border-top: none;
   border-radius: 0 0 12px 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
   padding: 16px;
   animation: slideDown 0.2s ease-out;
+  transition: background-color .3s ease, border-color .3s ease;
 }
 
 @keyframes slideDown {
@@ -264,7 +267,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #374151;
+  color: var(--muted-strong);
   font-size: 16px;
   text-align: left;
   cursor: pointer;
@@ -272,7 +275,7 @@
 }
 
 .mobileMenuItem:hover {
-  background: #f3f4f6;
+  background: var(--surface-alt);
 }
 
 .mobileUserInfo {
@@ -281,7 +284,7 @@
   gap: 12px;
   padding: 12px 16px;
   border-radius: 8px;
-  background: #f9fafb;
+  background: var(--surface-alt);
   margin-bottom: 8px;
 }
 
@@ -293,7 +296,7 @@
 
 .mobileUserEmail {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 /* Backdrop */

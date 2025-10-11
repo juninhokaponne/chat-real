@@ -111,6 +111,7 @@ export const useVideoChat = (roomId: string) => {
     error,
     // ✅ Add these for chat
     socket,
-    username
+    username,
+    webRTCService: webRTCServiceRef.current
   };
 };

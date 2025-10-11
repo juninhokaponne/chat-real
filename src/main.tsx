@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import { ToastProvider } from './ui/Toast'
+import { ThemeProvider } from './hooks/useTheme'
 
 // ensure a modal root exists at startup
 if (typeof document !== 'undefined') {
@@ -16,12 +17,17 @@ if (typeof document !== 'undefined') {
   }
 }
 
-createRoot(document.getElementById('root')!).render(
+const rootEl = document.getElementById('root');
+if (rootEl) {
+  createRoot(rootEl).render(
   <StrictMode>
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ToastProvider>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </ToastProvider>
     </BrowserRouter>
   </StrictMode>,
-)
+  )
+}

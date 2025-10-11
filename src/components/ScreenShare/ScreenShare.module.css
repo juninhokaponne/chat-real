@@ -1,0 +1,24 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--border-default);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(.2, .9, .2, 1);
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--border-emphasis);
+  background: var(--hover);
+}
+
+.active {
+  background: var(--warning);
+  border-color: var(--warning-dark);
+}

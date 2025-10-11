@@ -1,8 +1,9 @@
 
 .landing {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
   font-family: 'Inter', sans-serif;
+  transition: background 0.35s ease;
 }
 
 .content {
@@ -11,7 +12,7 @@
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 64px);
-  color: white;
+  color: var(--text);
   text-align: center;
   padding: 28px 20px 120px; /* extra bottom padding so footer doesn't overlap actions */
   position: relative;
@@ -56,13 +57,13 @@
 }
 
 .feature {
-  background: var(--surface-glass);
+  background: var(--glass);
   padding: 20px;
   border-radius: 14px;
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
-  transition: all 0.22s cubic-bezier(.2,.9,.2,1);
-  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--glass-border);
+  transition: transform 0.22s cubic-bezier(.2,.9,.2,1), box-shadow 0.22s ease, background-color .3s;
+  box-shadow: var(--shadow-elevated);
 }
 
 .feature:hover {
@@ -97,8 +98,8 @@
 }
 
 .primaryButton {
-  background: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-600) 100%);
-  color: var(--text-primary);
+  background: var(--gradient-primary);
+  color: #fff;
   border: none;
   padding: 14px 34px;
   border-radius: 14px;
@@ -106,8 +107,8 @@
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(.2,.9,.2,1);
-  box-shadow: var(--shadow-lg);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, filter .3s;
+  box-shadow: 0 8px 30px rgba(59,130,246,0.18);
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -136,8 +137,8 @@
 
 .secondaryButton {
   background: transparent;
-  color: var(--text-primary);
-  border: 2px solid var(--border-default);
+  color: var(--text);
+  border: 2px solid var(--divider);
   padding: 12px 24px;
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
@@ -151,19 +152,17 @@
 }
 
 .secondaryButton:hover {
-  background: var(--hover);
-  border-color: var(--border-emphasis);
-  transform: translateY(-1px);
+  background: var(--surface-hover);
+  border-color: var(--muted-strong);
 }
 
 .joinRoomSection {
   margin-top: 28px;
   padding: 18px;
-  background: var(--surface);
+  background: var(--glass);
   border-radius: 12px;
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--glass-border);
   max-width: 420px;
   width: 100%;
 }
@@ -177,23 +176,23 @@
 .joinInput {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid var(--border-default);
+  border: 2px solid var(--divider);
   border-radius: 8px;
-  background: var(--surface-elevated);
-  color: var(--text-primary);
+  background: var(--surface-alt);
+  color: var(--text);
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   margin-bottom: 16px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color .3s;
 }
 
 .joinInput::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--muted);
 }
 
 .joinInput:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: var(--primary-500);
 }
 
 .error {
@@ -205,8 +204,8 @@
 
 .joinButton {
   width: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--gradient-primary);
+  color: #fff;
   border: none;
   padding: 12px 16px;
   border-radius: 8px;
@@ -218,7 +217,7 @@
 }
 
 .joinButton:hover {
-  background: rgba(255, 255, 255, 0.3);
+  filter: brightness(1.05);
 }
 
 .footer {
@@ -229,7 +228,7 @@
   text-align: center;
   font-size: 13px;
   opacity: 0.8;
-  color: rgba(255,255,255,0.9);
+  color: var(--muted-strong);
   z-index: 10;
 }
 

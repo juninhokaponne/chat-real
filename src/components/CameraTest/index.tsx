@@ -21,6 +21,7 @@ export const CameraTest = ({ onClose }: CameraTestProps) => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
+
   const startTest = async () => {
     setStatus('testing');
     setMessage('Requesting access to camera and microphone...');
@@ -67,6 +68,11 @@ export const CameraTest = ({ onClose }: CameraTestProps) => {
       videoRef.current.srcObject = null;
     }
   };
+
+   const handleCloseAndStop = () => {
+    stopTest(); 
+    onClose(); 
+};
 
   const handleEchoTest = () => {
     if (!stream) return;
@@ -145,7 +151,7 @@ export const CameraTest = ({ onClose }: CameraTestProps) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>
+        <button className={styles.closeButton} onClick={handleCloseAndStop}>
           <MdClose />
         </button>
         

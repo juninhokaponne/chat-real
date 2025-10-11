@@ -12,6 +12,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <title>Chat Real - Video Chat</title>
+  <script>
+    // Early theme application to avoid flash
+    (function() {
+      try {
+        var stored = localStorage.getItem('chat-real-theme');
+        var systemPref = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        var theme = stored || systemPref;
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
 </head>
 
 <body>

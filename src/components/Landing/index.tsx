@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import { 
-  MdVideoCall, 
-  MdMic, 
-  MdVideocam, 
-  MdSecurity, 
-  MdDevices, 
+import {
+  MdVideoCall,
+  MdMic,
+  MdVideocam,
+  MdSecurity,
+  MdDevices,
   MdGroup,
   MdArrowForward,
-  MdAccessTime 
+  MdAccessTime,
 } from 'react-icons/md';
 
 import { useAuth } from '../../auth/authContext';
 import { generateRoomId } from '../../utils/roomUtils';
 import { CameraTest } from '../CameraTest';
 import { Header } from '../Header';
+import { HelpModal } from '../HelpModal';
 
 import styles from './Landing.module.css';
 
@@ -29,6 +30,7 @@ export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLo
   const [joinRoomId, setJoinRoomId] = useState('');
   const [showCameraTest, setShowCameraTest] = useState(false);
   const auth = useAuth();
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleCreateRoom = () => {
     if (isAuthenticated) {
@@ -111,8 +113,7 @@ export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLo
   ];
 
   const handleHelpClick = () => {
-    // TODO: Navigate to help page or open help modal
-    console.log('Help clicked');
+    setShowHelp(true);
   };
 
   const handleSettingsClick = () => {
@@ -162,7 +163,7 @@ export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLo
         </button>
 
         <div className={styles.secondaryActions}>
-          <button className={styles.secondaryButton}>
+          <button className={styles.secondaryButton} onClick={() => setShowHelp(true)}>
             <MdMic size={20} />
             How it Works?
           </button>
@@ -202,6 +203,9 @@ export const Landing = ({ onStartCall, onOpenAuth, isAuthenticated = false, onLo
 
         {showCameraTest && (
           <CameraTest onClose={() => setShowCameraTest(false)} />
+        )}
+        {showHelp && (
+          <HelpModal onClose={() => setShowHelp(false)} />
         )}
       </div>
     </div>

@@ -7,6 +7,8 @@ import {
   MdMessage 
 } from 'react-icons/md';
 
+import { ScreenShare } from '../ScreenShare';
+
 import styles from './Controls.module.css';
 
 import type { MediaState } from '../../types';
@@ -17,6 +19,7 @@ interface ControlsProps {
   onToggleVideo: () => void;
   onEndCall: () => void;
   onToggleChat?: () => void; // ✅ optional prop for chat
+  webRTC?: any;
 }
 
 export const Controls = ({
@@ -24,7 +27,8 @@ export const Controls = ({
   onToggleAudio,
   onToggleVideo,
   onEndCall,
-  onToggleChat
+  onToggleChat,
+  webRTC,
 }: ControlsProps) => {
   return (
     <div className={styles.controls}>
@@ -51,6 +55,11 @@ export const Controls = ({
       >
         <MdMessage size={20} />
       </button>
+
+      <ScreenShare
+  onShareStart={(stream) => webRTC?.replaceVideoTrack(stream)}
+  onShareEnd={() => webRTC?.replaceVideoTrack(webRTC.originalCamStream)}
+/>
       
       <button 
         className={`${styles.controlButton} ${styles.endCallButton}`}

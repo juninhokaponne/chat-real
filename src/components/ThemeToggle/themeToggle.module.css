@@ -1,0 +1,52 @@
+.toggle {
+  --toggle-height: 34px;
+  --toggle-width: 70px;
+  position: relative;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  border-radius: calc(var(--toggle-height) / 2);
+  border: 1px solid var(--divider);
+  background: var(--surface-alt);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color .35s ease, border-color .35s ease;
+}
+
+.toggle:hover {
+  background: var(--surface-hover);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: color .35s ease, transform .45s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.iconWrapper[data-active='true'] {
+  color: var(--primary-500);
+  transform: scale(1.15) rotate(8deg);
+}
+
+.knob {
+  position: absolute;
+  top: 3px;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform .45s cubic-bezier(.68,-0.55,.27,1.55), background-color .35s ease;
+  left: 4px;
+}
+
+.knob[data-theme='dark'] {
+  transform: translateX(34px);
+}

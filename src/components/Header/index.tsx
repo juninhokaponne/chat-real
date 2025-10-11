@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import { 
-  MdAccountCircle, 
-  MdSettings, 
-  MdLogin, 
+import {
+  MdAccountCircle,
+  MdSettings,
+  MdLogin,
   MdHelpOutline,
   MdKeyboardArrowDown,
   MdMenu,
-  MdClose
+  MdClose,
 } from 'react-icons/md';
+
+import { HelpModal } from '../HelpModal';
+import { SettingsModal } from '../SettingsModal';
+import { ThemeToggle } from '../ThemeToggle/index.tsx';
 
 import styles from './Header.module.css';
 
@@ -23,6 +27,8 @@ interface HeaderProps {
 export const Header = ({ onHelpClick, onSettingsClick, onOpenAuth, isLoggedIn = false, user = null, onLogout }: HeaderProps) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleUserMenuToggle = () => {
     setShowUserMenu(!showUserMenu);
@@ -38,16 +44,14 @@ export const Header = ({ onHelpClick, onSettingsClick, onOpenAuth, isLoggedIn = 
   };
 
   const handleSettings = () => {
-    if (onSettingsClick) {
-      onSettingsClick();
-    }
+    if (onSettingsClick) onSettingsClick();
     setShowUserMenu(false);
+    setShowSettings(true);
   };
 
   const handleHelp = () => {
-    if (onHelpClick) {
-      onHelpClick();
-    }
+    if (onHelpClick) onHelpClick();
+    setShowHelp(true);
   };
 
   return (
@@ -82,6 +86,8 @@ export const Header = ({ onHelpClick, onSettingsClick, onOpenAuth, isLoggedIn = 
             >
               <MdHelpOutline size={20} />
             </button>
+
+            <ThemeToggle />
 
             <button 
               className={styles.settingsButton}
@@ -163,6 +169,9 @@ export const Header = ({ onHelpClick, onSettingsClick, onOpenAuth, isLoggedIn = 
                 <MdHelpOutline size={20} />
                 Help & Support
               </button>
+              <div style={{padding:'6px 4px'}}>
+                <ThemeToggle />
+              </div>
               
               <button className={styles.mobileMenuItem} onClick={handleSettings}>
                 <MdSettings size={20} />
@@ -204,6 +213,12 @@ export const Header = ({ onHelpClick, onSettingsClick, onOpenAuth, isLoggedIn = 
           }}
         />
       )}
+    {showSettings && (
+      <SettingsModal onClose={() => setShowSettings(false)} />
+    )}
+    {showHelp && (
+      <HelpModal onClose={() => setShowHelp(false)} />
+    )}
     </header>
   );
 };
