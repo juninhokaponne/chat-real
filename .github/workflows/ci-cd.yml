@@ -66,7 +66,7 @@ jobs:
         path: dist/
         retention-days: 1
 
-  # Security audit
+  # Security audit (informational; non-blocking)
   security:
     name: Security Audit
     runs-on: ubuntu-latest
@@ -108,6 +108,7 @@ jobs:
         echo "✅ Build completed"
         echo "✅ Security audit passed"
         echo "🚀 Ready for merge!"
+
   deploy-info:
     name: Deploy Info
     runs-on: ubuntu-latest
