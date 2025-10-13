@@ -4,8 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 
 import './index.css'
 import App from './App.tsx'
-import { ToastProvider } from './ui/Toast'
 import { ThemeProvider } from './hooks/useTheme'
+import { ToastProvider } from './ui/Toast'
 
 // ensure a modal root exists at startup
 if (typeof document !== 'undefined') {
