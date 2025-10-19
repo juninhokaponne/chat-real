@@ -18,18 +18,17 @@ import styles from './Header.module.css';
 interface HeaderProps {
   onHelpClick?: () => void;
   onSettingsClick?: () => void;
-  onLoginClick?: () => void;
+  onOpenAuth?: () => void;
+  isLoggedIn?: boolean;
+  user?: { name?: string; email?: string; displayName?: string } | null;
+  onLogout?: () => void;
 }
 
-export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderProps) => {
+export const Header = ({ onHelpClick, onSettingsClick, onOpenAuth, isLoggedIn = false, user = null, onLogout }: HeaderProps) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  
-  // Mock user state - later this will come from authentication
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const user = { name: 'John Doe', email: 'john@example.com' };
 
   const handleUserMenuToggle = () => {
     setShowUserMenu(!showUserMenu);
@@ -40,14 +39,7 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
   };
 
   const handleLogin = () => {
-    if (onLoginClick) {
-      onLoginClick();
-    }
-    setShowUserMenu(false);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
+    if (onOpenAuth) onOpenAuth();
     setShowUserMenu(false);
   };
 
@@ -115,7 +107,7 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                     onClick={handleUserMenuToggle}
                   >
                     <MdAccountCircle size={32} />
-                    <span className={styles.userName}>{user.name}</span>
+                    <span className={styles.userName}>{user?.displayName || user?.name || user?.email || 'You'}</span>
                     <MdKeyboardArrowDown 
                       className={`${styles.dropdownIcon} ${showUserMenu ? styles.rotated : ''}`} 
                       size={16}
@@ -127,8 +119,8 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                       <div className={styles.dropdownHeader}>
                         <MdAccountCircle size={24} />
                         <div>
-                          <div className={styles.dropdownName}>{user.name}</div>
-                          <div className={styles.dropdownEmail}>{user.email}</div>
+                          <div className={styles.dropdownName}>{user?.displayName || user?.name || user?.email}</div>
+                          <div className={styles.dropdownEmail}>{user?.email}</div>
                         </div>
                       </div>
                       <hr className={styles.dropdownDivider} />
@@ -141,7 +133,7 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                         Help & Support
                       </button>
                       <hr className={styles.dropdownDivider} />
-                      <button className={styles.dropdownItem} onClick={handleLogout}>
+                      <button className={styles.dropdownItem} onClick={() => { if (onLogout) onLogout(); }}>
                         <MdLogin size={18} />
                         Sign Out
                       </button>
@@ -191,11 +183,11 @@ export const Header = ({ onHelpClick, onSettingsClick, onLoginClick }: HeaderPro
                   <div className={styles.mobileUserInfo}>
                     <MdAccountCircle size={24} />
                     <div>
-                      <div className={styles.mobileUserName}>{user.name}</div>
-                      <div className={styles.mobileUserEmail}>{user.email}</div>
+                      <div className={styles.mobileUserName}>{user?.name || user?.email}</div>
+                      <div className={styles.mobileUserEmail}>{user?.email}</div>
                     </div>
                   </div>
-                  <button className={styles.mobileMenuItem} onClick={handleLogout}>
+                  <button className={styles.mobileMenuItem} onClick={() => { if (onLogout) onLogout(); }}>
                     <MdLogin size={20} />
                     Sign Out
                   </button>

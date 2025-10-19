@@ -9,6 +9,7 @@ interface VideoContainerProps {
   isConnected: boolean;
   isConnecting: boolean;
   mediaState: { audio: boolean; video: boolean };
+  userName?: string | null;
 }
 
 export const VideoContainer = ({
@@ -17,6 +18,7 @@ export const VideoContainer = ({
   isConnected,
   isConnecting,
   mediaState
+  , userName
 }: VideoContainerProps) => {
 
   useEffect(() => {
@@ -57,9 +59,7 @@ export const VideoContainer = ({
             <MdVideocamOff size={48} />
           </div>
         )}
-        <div className={styles.videoLabel}>
-          You
-        </div>
+          <div className={styles.videoLabel}>{userName || 'You'}</div>
       </div>
 
       {/* Vídeo Remoto */}

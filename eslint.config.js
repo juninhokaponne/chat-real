@@ -8,7 +8,7 @@ import importPlugin from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'coverage', '*.config.js', '*.config.ts'] },
+  { ignores: ['dist', 'node_modules', 'coverage', '*.config.js', '*.config.ts', 'server/dist', 'server/**/*.js'] },
   
   // Base JavaScript configuration
   {
@@ -36,6 +36,7 @@ export default tseslint.config(
         },
       },
     },
+  // Note: compiled server artifacts are ignored via the top-level 'ignores' parameter above.
     plugins: {
       react,
       'react-hooks': reactHooks,
