@@ -122,7 +122,7 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
         webRTC={webRTCService}
       />
 
-      {isChatOpen && socket && (
+      {socket && (
         <ChatPanel socket={socket} roomId={roomId} username={username || 'Guest'} />
       )}
     </div>

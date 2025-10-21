@@ -1,10 +1,8 @@
-import io from 'socket.io-client';
 // Native WebRTC implementation without external dependencies
 export class WebRTCService {
   public localStream: MediaStream | null = null;
   private peerConnection: RTCPeerConnection | null = null;
   private roomId: string;
-  private isInitiator = false;
   private username: string;
 
   private signalingSocket: any = null;
@@ -46,7 +44,6 @@ export class WebRTCService {
 
     this.signalingSocket.on('start-offer', () => {
       // When we receive this, we ARE the initiator for this session.
-      this.isInitiator = true;
       this.createOffer(); 
     });
 

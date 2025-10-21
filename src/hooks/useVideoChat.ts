@@ -15,7 +15,7 @@ export const useVideoChat = (roomId: string) => {
   const [error, setError] = useState<string | null>(null);
   const [mediaState, setMediaState] = useState({ audio: true, video: true });
   const [remoteVideoEnabled, setRemoteVideoEnabled] = useState<boolean | undefined>(undefined);
-  const [participantCount, setParticipantCount] = useState(1);
+  const [_participantCount, setParticipantCount] = useState(1);
   const [remoteUsername, setRemoteUsername] = useState<string>('Participant');
 
   const webRTCServiceRef = useRef<WebRTCService | null>(null);

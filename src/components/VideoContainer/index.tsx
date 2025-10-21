@@ -10,7 +10,7 @@ interface VideoContainerProps {
   isConnecting: boolean;
   mediaState: { audio: boolean; video: boolean };
   remoteStream: MediaStream | null;
-  remoteVideoEnabled:boolean,
+  remoteVideoEnabled:boolean | undefined;
   remoteUsername:string
 }
 
@@ -34,7 +34,7 @@ const showWaitingMessage = !isRemotePeerPresent ||(isRemotePeerPresent && remote
     if (remoteVideoRef.current && remoteVideoRef.current.srcObject) {
       remoteVideoRef.current.play().catch(console.error);
     }
-  }, [remoteVideoRef.current?.srcObject]); 
+  }, [remoteVideoRef.current?.srcObject,remoteVideoRef]); 
   if (isConnecting) {
     return (
       <div className={styles.connectingMessage}>
