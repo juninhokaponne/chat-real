@@ -1,14 +1,20 @@
+import io from 'socket.io-client';
 // Native WebRTC implementation without external dependencies
 export class WebRTCService {
   public localStream: MediaStream | null = null;
   private peerConnection: RTCPeerConnection | null = null;
   private roomId: string;
   private isInitiator = false;
+  private username: string;
+
+  private signalingSocket: any = null;
+  private iceCandidateQueue: RTCIceCandidateInit[] = [];
 
   // Public callbacks for the hook
   public onLocalStream: ((stream: MediaStream) => void) | null = null;
   public onRemoteStream: ((stream: MediaStream) => void) | null = null;
   public onDisconnected: (() => void) | null = null;
+  public onConnected: (() => void) | null = null;
 
   private readonly configuration: RTCConfiguration = {
     iceServers: [
@@ -17,19 +23,58 @@ export class WebRTCService {
     ]
   };
 
-  constructor(roomId: string) {
+  constructor(roomId: string, socket: any, username: string) {
     this.roomId = roomId;
+    this.signalingSocket = socket;
+    this.username = username;
   }
 
   async initialize(): Promise<void> {
     try {
       // First try with video and audio
       await this.tryGetUserMedia();
-      this.setupConnection();
+      console.log("done");
+      this.createPeerConnection();
+      this.setupSignalingListeners();
     } catch (error) {
       console.error('Erro ao acessar mídia:', error);
       throw error;
     }
+  }
+
+  private setupSignalingListeners(): void {
+
+    this.signalingSocket.on('start-offer', () => {
+      // When we receive this, we ARE the initiator for this session.
+      this.isInitiator = true;
+      this.createOffer(); 
+    });
+
+    this.signalingSocket.on('offer', (sdp: RTCSessionDescriptionInit) => {
+      this.setRemoteDescriptionAndCreateAnswer(sdp);
+    });
+
+    this.signalingSocket.on('answer', (sdp: RTCSessionDescriptionInit) => {
+      this.setRemoteDescription(sdp);
+    });
+
+    this.signalingSocket.on('candidate', (candidate: RTCIceCandidateInit) => {
+      if (candidate) {
+        if (this.peerConnection?.remoteDescription) {
+          this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+            .catch(e => console.error('Error adding ICE candidate:', e));
+        } else {
+          this.iceCandidateQueue.push(candidate);
+          console.log('Candidate buffered:', this.iceCandidateQueue.length);
+        }
+      }
+    });
+
+    this.signalingSocket.on('disconnect', () => {
+      console.log("Signaling socket disconnected.");
+    });
+
+    this.signalingSocket.emit('join', { roomId: this.roomId, username: this.username });
   }
 
   private async tryGetUserMedia(): Promise<void> {
@@ -51,30 +96,30 @@ export class WebRTCService {
         console.log(`Attempt ${i + 1}:`, constraints[i]);
         this.localStream = await navigator.mediaDevices.getUserMedia(constraints[i]);
         this.originalCamStream = this.localStream;
-        
+
         // Stream obtained successfully
-        
+
         // Check if tracks are active
         const videoTracks = this.localStream.getVideoTracks();
         const audioTracks = this.localStream.getAudioTracks();
-        
+
         // Validate video tracks are active
-        
+
         if (this.onLocalStream) {
           // Debug: Local stream callback
           this.onLocalStream(this.localStream);
         }
-        
+
         console.log('Media obtained successfully:', {
           video: videoTracks.length > 0,
           audio: audioTracks.length > 0,
           streamActive: this.localStream.active
         });
-        
+
         return; // Success, exit function
       } catch (error) {
         console.log(`Attempt ${i + 1} failed:`, error);
-        
+
         // If it's the last attempt, throw the error
         if (i === constraints.length - 1) {
           throw new Error(`Could not access camera/microphone: ${error}`);
@@ -83,21 +128,8 @@ export class WebRTCService {
     }
   }
 
-  private setupConnection(): void {
-    // Determines who is the initiator based on localStorage
-    const existingPeer = localStorage.getItem(`room_${this.roomId}_active`);
-    this.isInitiator = !existingPeer;
-
-    if (this.isInitiator) {
-      localStorage.setItem(`room_${this.roomId}_active`, 'true');
-    }
-
-    this.createPeerConnection();
-    
-    // Simula a descoberta de outro peer após um tempo
-    setTimeout(() => {
-      this.simulateSecondPeer();
-    }, 2000);
+  public get peerConnectionInstance(): RTCPeerConnection | null {
+    return this.peerConnection;
   }
 
   private createPeerConnection(): void {
@@ -112,6 +144,7 @@ export class WebRTCService {
 
     // Peer connection events
     this.peerConnection.ontrack = (event) => {
+      console.log('✅ Remote track received! Stream ID:', event.streams[0].id);
       const [remoteStream] = event.streams;
       if (this.onRemoteStream) {
         this.onRemoteStream(remoteStream);
@@ -120,15 +153,24 @@ export class WebRTCService {
 
     this.peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
-        // In a real implementation, would send via signaling server
         this.handleIceCandidate(event.candidate);
       }
     };
 
     this.peerConnection.onconnectionstatechange = () => {
-      console.log('Connection state:', this.peerConnection?.connectionState);
-      if (this.peerConnection?.connectionState === 'disconnected' || 
-          this.peerConnection?.connectionState === 'failed') {
+      console.log("w");
+      const state = this.peerConnection?.connectionState;
+      console.log(state);
+      console.log('Connection state:', state);
+
+      if (state === 'connected') {
+        if (this.onConnected) {
+          this.onConnected(); 
+        }
+      }
+
+      if (state === 'disconnected' ||
+        state === 'failed') {
         if (this.onDisconnected) {
           this.onDisconnected();
         }
@@ -136,70 +178,67 @@ export class WebRTCService {
     };
   }
 
-  private async simulateSecondPeer(): Promise<void> {
-    // For demonstration, simulates a connection after a few seconds
-    // In real production, this would happen when another user enters the room
-    setTimeout(() => {
-      this.simulateRemotePeer();
-    }, 3000);
+  public async createOffer(): Promise<void> {
+    if (!this.peerConnection || !this.signalingSocket) return;
+    const offer = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offer);
+
+    this.signalingSocket.emit('offer', { sdp: this.peerConnection.localDescription, roomId: this.roomId });
   }
 
-  private simulateRemotePeer(): void {
-    // Simulates the arrival of a remote stream for demonstration
-    // In production, this would come through WebRTC from another browser
-    if (this.localStream && this.onRemoteStream) {
-      // Create a mirrored version of local stream to simulate remote
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d')!;
-      canvas.width = 320;
-      canvas.height = 240;
-      
-      const video = document.createElement('video');
-      video.srcObject = this.localStream;
-      video.play();
-      
-      // Create simulated mirrored stream
-      const drawFrame = () => {
-        if (video.readyState >= video.HAVE_CURRENT_DATA) {
-          // Draw mirrored video
-          ctx.save();
-          ctx.scale(-1, 1);
-          ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-          ctx.restore();
-          
-          // Add visual indicator for "remote"
-          ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
-          ctx.fillRect(10, 10, 80, 30);
-          ctx.fillStyle = 'white';
-          ctx.font = '14px Arial';
-          ctx.fillText('REMOTO', 15, 30);
-        }
-        requestAnimationFrame(drawFrame);
-      };
-      
-      video.addEventListener('loadeddata', () => {
-        drawFrame();
-        
-        // Create stream from canvas
-        const simulatedStream = canvas.captureStream(30);
-        
-        // Add audio from original stream (cloned)
-        const audioTrack = this.localStream!.getAudioTracks()[0];
-        if (audioTrack) {
-          simulatedStream.addTrack(audioTrack.clone());
-        }
-        
-        if (this.onRemoteStream) {
-          this.onRemoteStream(simulatedStream);
-        }
-      });
+  public async createAnswer(): Promise<void> {
+    if (!this.peerConnection || !this.signalingSocket) return;
+
+    try {
+      const answer = await this.peerConnection.createAnswer();
+      await this.peerConnection.setLocalDescription(answer);
+
+      console.log('Sending Answer SDP:', this.peerConnection.localDescription?.type);
+
+      this.signalingSocket.emit('answer', { sdp: this.peerConnection.localDescription, roomId: this.roomId });
+
+    } catch (error) {
+      console.error('Error creating or sending Answer:', error);
+    }
+  }
+
+  public async setRemoteDescriptionAndCreateAnswer(sdp: RTCSessionDescriptionInit): Promise<void> {
+    console.log(this.peerConnection);
+    if (!this.peerConnection) return;
+    try {
+      await this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
+
+    } catch (error) {
+      console.error('ERROR: Failed to set remote Offer description:', error);
+      return; 
+    }
+    this.processIceCandidateQueue();
+    await this.createAnswer();
+  }
+
+  public async setRemoteDescription(sdp: RTCSessionDescriptionInit): Promise<void> {
+    if (!this.peerConnection) return;
+    await this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
+    this.processIceCandidateQueue();
+  }
+
+  private processIceCandidateQueue(): void {
+    while (this.iceCandidateQueue.length > 0) {
+      const candidate = this.iceCandidateQueue.shift();
+      if (candidate) {
+        this.peerConnection?.addIceCandidate(new RTCIceCandidate(candidate))
+          .catch(e => console.error('Error adding buffered ICE candidate:', e));
+      }
     }
   }
 
   private handleIceCandidate(candidate: RTCIceCandidate): void {
-    // In a real implementation, would send to other peer via server
-    // For demonstration, just log
-    console.log('ICE candidate:', candidate);
+    if (candidate && this.signalingSocket) {
+      this.signalingSocket.emit('candidate', { candidate: candidate, roomId: this.roomId });
+      console.log('ICE candidate generated:', candidate);
+    } else {
+      console.log('ICE candidate generated (Signaling not ready):', candidate);
+    }
   }
 
   toggleAudio(): boolean {
@@ -221,16 +260,27 @@ export class WebRTCService {
       if (videoTrack) {
         videoTrack.enabled = !videoTrack.enabled;
         console.log('Video toggled:', videoTrack.enabled);
+        this.signalingSocket.emit('video_status_change', { roomId: this.roomId, videoEnabled: videoTrack.enabled });
         return videoTrack.enabled;
       }
     }
     console.log('No video track available');
     return false;
   }
-
   disconnect(): void {
+    if (this.signalingSocket) {
+      this.signalingSocket.emit('user_leaving', { roomId: this.roomId });
+    }
     localStorage.removeItem(`room_${this.roomId}_active`);
-    this.cleanup();
+    this.cleanup(); 
+  }
+
+  cleanupRTCAndStreams(): void {
+
+    if (this.peerConnection) {
+      this.peerConnection.close();
+      this.peerConnection = null;
+    }
   }
 
   cleanup(): void {
@@ -238,8 +288,17 @@ export class WebRTCService {
       this.localStream.getTracks().forEach(track => track.stop());
       this.localStream = null;
     }
+    this.cleanupRTCAndStreams();
+    if (this.signalingSocket) {
+      this.signalingSocket.disconnect();
+    }
+  }
+
+  public closeRemoteConnection(): void {
+    console.log("Cleaning up RTC peer connection...");
 
     if (this.peerConnection) {
+      // Close the peer connection
       this.peerConnection.close();
       this.peerConnection = null;
     }
@@ -260,28 +319,28 @@ export class WebRTCService {
   // Verifica se o stream está ativo
   isStreamActive(): boolean {
     if (!this.localStream) return false;
-    
-    return this.localStream.getTracks().some(track => 
+
+    return this.localStream.getTracks().some(track =>
       track.readyState === 'live' && track.enabled
     );
   }
 
   public originalCamStream: MediaStream | null = null;
 
-public async replaceVideoTrack(newStream: MediaStream) {
-  if (!this.peerConnection) return;
+  public async replaceVideoTrack(newStream: MediaStream) {
+    if (!this.peerConnection) return;
 
-  const newVideoTrack = newStream.getVideoTracks()[0];
-  if (!newVideoTrack) return;
+    const newVideoTrack = newStream.getVideoTracks()[0];
+    if (!newVideoTrack) return;
 
-  const sender = this.peerConnection
-    .getSenders()
-    .find((s) => s.track && s.track.kind === 'video');
+    const sender = this.peerConnection
+      .getSenders()
+      .find((s) => s.track && s.track.kind === 'video');
 
-  if (sender) {
-    await sender.replaceTrack(newVideoTrack);
-    this.localStream = newStream;
-    if (this.onLocalStream) this.onLocalStream(newStream);
+    if (sender) {
+      await sender.replaceTrack(newVideoTrack);
+      this.localStream = newStream;
+      if (this.onLocalStream) this.onLocalStream(newStream);
+    }
   }
-}
 }

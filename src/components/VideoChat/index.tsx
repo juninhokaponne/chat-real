@@ -31,6 +31,9 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
     socket,
     username,
     webRTCService,
+    remoteStream,
+    remoteVideoEnabled,
+    remoteUsername
   } = useVideoChat(roomId);
 
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -105,6 +108,9 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
         isConnected={isConnected}
         isConnecting={isConnecting}
         mediaState={mediaState}
+        remoteStream={remoteStream}
+        remoteVideoEnabled={remoteVideoEnabled}
+        remoteUsername={remoteUsername}
       />
 
       <Controls

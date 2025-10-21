@@ -17,6 +17,7 @@ export default function ChatPanel({ socket, roomId, username }: ChatPanelProps) 
     if (!socket) return;
 
     const handleMessage = (data: { sender: string; text: string }) => {
+      console.log(data.text);
       setMessages(prev => [...prev, data]);
     };
 
