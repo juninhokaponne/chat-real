@@ -4,80 +4,54 @@
   padding: 0;
 }
 
+/* Light theme (default) */
 :root {
-  /* Professional Color Palette */
-  
-  /* Background Colors - Dark Professional Theme */
-  --bg-primary: #0f172a;      /* Deep slate - main background */
-  --bg-secondary: #1e293b;    /* Slate 800 - secondary background */
-  --bg-tertiary: #334155;     /* Slate 700 - elevated surfaces */
-  --bg-accent: #475569;       /* Slate 600 - subtle accents */
-  
-  /* Surface Colors */
-  --surface: #1e293b;         /* Cards, modals */
-  --surface-elevated: #334155; /* Elevated cards, dropdowns */
-  --surface-glass: rgba(30, 41, 59, 0.8); /* Glass morphism */
-  
-  /* Border Colors */
-  --border-subtle: #334155;    /* Subtle borders */
-  --border-default: #475569;   /* Default borders */
-  --border-emphasis: #64748b;  /* Emphasized borders */
-  
-  /* Text Colors */
-  --text-primary: #f8fafc;     /* Primary text - white */
-  --text-secondary: #cbd5e1;   /* Secondary text - slate 300 */
-  --text-muted: #94a3b8;       /* Muted text - slate 400 */
-  --text-disabled: #64748b;    /* Disabled text - slate 500 */
-  
-  /* Brand Colors - Professional Blue */
-  --brand-50: #eff6ff;
-  --brand-100: #dbeafe;
-  --brand-200: #bfdbfe;
-  --brand-300: #93c5fd;
-  --brand-400: #60a5fa;
-  --brand-500: #3b82f6;        /* Primary brand color */
-  --brand-600: #2563eb;        /* Darker brand */
-  --brand-700: #1d4ed8;        /* Much darker brand */
-  --brand-800: #1e40af;
-  --brand-900: #1e3a8a;
-  
-  /* Semantic Colors */
-  --success: #10b981;          /* Green - success states */
-  --success-light: #34d399;
-  --success-dark: #059669;
-  
-  --warning: #f59e0b;          /* Amber - warning states */
-  --warning-light: #fbbf24;
-  --warning-dark: #d97706;
-  
-  --error: #ef4444;            /* Red - error states */
-  --error-light: #f87171;
-  --error-dark: #dc2626;
-  
-  --info: #06b6d4;             /* Cyan - info states */
-  --info-light: #22d3ee;
-  --info-dark: #0891b2;
-  
-  /* Interactive States */
-  --hover: rgba(59, 130, 246, 0.1);    /* Subtle brand hover */
-  --active: rgba(59, 130, 246, 0.2);   /* Active state */
-  --focus: #3b82f6;                     /* Focus ring color */
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
-  /* Legacy variables for compatibility */
-  --bg-100: var(--bg-primary);
-  --bg-200: var(--bg-secondary);
-  --glass: var(--surface-glass);
-  --muted: var(--text-muted);
-  --text: var(--text-primary);
-  --primary-500: var(--brand-500);
-  --accent-500: var(--info);
-  --success-500: var(--success);
+  --color-bg-gradient-start: #764ba2;
+  --color-bg-gradient-end: #553C9A;
+  --bg-100: var(--color-bg-gradient-start);
+  --bg-200: var(--color-bg-gradient-end);
+  --glass: rgba(255,255,255,0.55);
+  --glass-solid: rgba(255,255,255,0.95);
+  --glass-border: rgba(229,231,235,0.8);
+  --muted: rgba(55,65,81,0.7);
+  --muted-strong: #374151;
+  --text: #1f2937;
+  --text-inverse: #f1f5f9;
+  --surface: #ffffff;
+  --surface-alt: #f3f4f6;
+  --surface-hover: #f1f5f9;
+  --divider: #e5e7eb;
+  --primary-500: #3b82f6;
+  --accent-500: #06b6d4;
+  --success-500: #10b981;
+  --danger-500: #ef4444;
+  --shadow-elevated: 0 6px 18px rgba(2,6,23,0.18);
+  --gradient-primary: linear-gradient(90deg, var(--accent-500), var(--primary-500));
+}
+
+/* Dark theme overrides */
+:root[data-theme='dark'] {
+  --color-bg-gradient-start: #0f172a; /* slate-900 */
+  --color-bg-gradient-end: #1e293b;   /* slate-800 */
+  --bg-100: var(--color-bg-gradient-start);
+  --bg-200: var(--color-bg-gradient-end);
+  --glass: rgba(255,255,255,0.06);
+  --glass-solid: rgba(30,41,59,0.85);
+  --glass-border: rgba(255,255,255,0.08);
+  --muted: rgba(255,255,255,0.6);
+  --muted-strong: #e2e8f0;
+  --text: #e6eef8;
+  --text-inverse: #0f172a;
+  --surface: #1e293b;
+  --surface-alt: #24324a;
+  --surface-hover: #2d3d57;
+  --divider: rgba(255,255,255,0.12);
+  --primary-500: #3b82f6;
+  --accent-500: #06b6d4;
+  --success-500: #10b981;
+  --danger-500: #ef4444;
+  --shadow-elevated: 0 6px 18px rgba(0,0,0,0.55);
+  --gradient-primary: linear-gradient(90deg, var(--accent-500), var(--primary-500));
 }
 
 html, body {
@@ -91,8 +65,8 @@ html, body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
-  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
+  color: var(--text);
   overflow: auto;
   scrollbar-width: none; 
   -ms-overflow-style: none; 
@@ -109,4 +83,25 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  transition: background-color .25s ease, color .25s ease;
+}
+
+/* Utility surfaces */
+.surface {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.surface-alt {
+  background: var(--surface-alt);
+}
+
+.elevated {
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Scrollbar theming (only visible if forced to show) */
+body[data-theme='dark']::-webkit-scrollbar-thumb,
+:root[data-theme='dark'] body::-webkit-scrollbar-thumb {
+  background: var(--surface-hover);
 }

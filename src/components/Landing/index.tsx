@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { 
-  MdVideoCall, 
-  MdMic, 
-  MdVideocam, 
-  MdSecurity, 
-  MdDevices, 
+import {
+  MdVideoCall,
+  MdMic,
+  MdVideocam,
+  MdSecurity,
+  MdDevices,
   MdGroup,
   MdArrowForward,
-  MdAccessTime 
+  MdAccessTime,
 } from 'react-icons/md';
 
 import { generateRoomId } from '../../utils/roomUtils';
 import { CameraTest } from '../CameraTest';
 import { Header } from '../Header';
+import { HelpModal } from '../HelpModal';
 
 import styles from './Landing.module.css';
 
@@ -23,6 +24,7 @@ interface LandingProps {
 export const Landing = ({ onStartCall }: LandingProps) => {
   const [joinRoomId, setJoinRoomId] = useState('');
   const [showCameraTest, setShowCameraTest] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleCreateRoom = () => {
     const roomId = generateRoomId();
@@ -78,8 +80,7 @@ export const Landing = ({ onStartCall }: LandingProps) => {
   ];
 
   const handleHelpClick = () => {
-    // TODO: Navigate to help page or open help modal
-    console.log('Help clicked');
+    setShowHelp(true);
   };
 
   const handleSettingsClick = () => {
@@ -129,7 +130,7 @@ export const Landing = ({ onStartCall }: LandingProps) => {
         </button>
 
         <div className={styles.secondaryActions}>
-          <button className={styles.secondaryButton}>
+          <button className={styles.secondaryButton} onClick={() => setShowHelp(true)}>
             <MdMic size={20} />
             How it Works?
           </button>
@@ -169,6 +170,9 @@ export const Landing = ({ onStartCall }: LandingProps) => {
 
         {showCameraTest && (
           <CameraTest onClose={() => setShowCameraTest(false)} />
+        )}
+        {showHelp && (
+          <HelpModal onClose={() => setShowHelp(false)} />
         )}
       </div>
     </div>
