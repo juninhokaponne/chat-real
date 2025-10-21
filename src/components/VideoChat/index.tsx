@@ -36,7 +36,7 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
     remoteUsername
   } = useVideoChat(roomId);
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [_isChatOpen, setIsChatOpen] = useState(false);
   const toggleChat = () => setIsChatOpen(prev => !prev);
 
   const handleEndCall = () => {
