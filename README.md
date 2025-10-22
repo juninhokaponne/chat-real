@@ -227,6 +227,9 @@ VITE_TURN_PASSWORD=your-password
 # Optional: App configuration
 VITE_APP_NAME="Chat Real"
 VITE_APP_VERSION=1.0.0
+
+#Mandatory: 
+VITE_SOCKET_URL=your-backend-server || http://localhost:5000
 ```
 
 </div>
@@ -251,6 +254,25 @@ VITE_APP_VERSION=1.0.0
 </div>
 
 ## Deployment
+
+### Deploy to Render
+
+<div align="left">
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/your-username/chat-real)
+
+</div>
+
+<div align="left">
+
+1. **Click** the deploy button above
+2. **Connect** your GitHub repository
+3. **Render setup** (via their dashboard):
+     - Service Type: Web Service
+     - Root Directory: backend/ 
+     - Build Command: npm install 
+     - Start Command: node server.js
+4. **Deploy** automatically
 
 ### Deploy to Netlify
 
@@ -278,6 +300,7 @@ npm run build
 **Supported Platforms**:
 - Netlify
 - Vercel  
+- Render
 - GitHub Pages
 - Firebase Hosting
 - Any static hosting service
