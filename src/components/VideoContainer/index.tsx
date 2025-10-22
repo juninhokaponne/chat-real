@@ -9,6 +9,9 @@ interface VideoContainerProps {
   isConnected: boolean;
   isConnecting: boolean;
   mediaState: { audio: boolean; video: boolean };
+  remoteStream: MediaStream | null;
+  remoteVideoEnabled:boolean | undefined;
+  remoteUsername:string
 }
 
 export const VideoContainer = ({
@@ -16,20 +19,22 @@ export const VideoContainer = ({
   remoteVideoRef,
   isConnected,
   isConnecting,
-  mediaState
+  mediaState,
+  remoteStream,
+  remoteVideoEnabled,
+  remoteUsername
 }: VideoContainerProps) => {
 
-  useEffect(() => {
-    if (localVideoRef.current && localVideoRef.current.srcObject) {
-      localVideoRef.current.play().catch(console.error);
-    }
-  }, [localVideoRef.current?.srcObject]); // eslint-disable-line react-hooks/exhaustive-deps
+const isRemotePeerPresent = remoteStream !== null;
+const showRemoteVideo = isConnected && isRemotePeerPresent && remoteVideoEnabled === true;
+const showRemotePlaceholder = isConnected && isRemotePeerPresent && remoteVideoEnabled === false;
+const showWaitingMessage = !isRemotePeerPresent ||(isRemotePeerPresent && remoteVideoEnabled===undefined);
 
   useEffect(() => {
     if (remoteVideoRef.current && remoteVideoRef.current.srcObject) {
       remoteVideoRef.current.play().catch(console.error);
     }
-  }, [remoteVideoRef.current?.srcObject]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [remoteVideoRef.current?.srcObject,remoteVideoRef]); 
   if (isConnecting) {
     return (
       <div className={styles.connectingMessage}>
@@ -45,7 +50,6 @@ export const VideoContainer = ({
       <div className={`${styles.videoWrapper} ${styles.localVideo}`}>
         <video
           autoPlay
-          muted
           playsInline
           className={styles.video}
           controls={false}
@@ -62,16 +66,18 @@ export const VideoContainer = ({
         </div>
       </div>
 
-      {/* Vídeo Remoto */}
+      {/* Vídeo Remote */}
       <div className={`${styles.videoWrapper} ${styles.remoteVideo}`}>
-        {isConnected && remoteVideoRef.current?.srcObject ? (
-          <video
-            autoPlay
-            playsInline
-            className={styles.video}
-            ref={remoteVideoRef}
-          />
-        ) : (
+        
+        <video
+          autoPlay
+          playsInline
+          className={styles.video}
+          ref={remoteVideoRef} 
+          style={{ display: (showRemoteVideo) ? 'block' : 'none' }}
+        />
+
+        {showWaitingMessage && (
           <div className={`${styles.placeholder} ${styles.remoteVideo}`}>
             <div style={{ textAlign: 'center' }}>
               <MdPerson size={64} style={{ marginBottom: '16px' }} />
@@ -83,16 +89,21 @@ export const VideoContainer = ({
                   fontWeight: 500,
                 }}
               >
-                Waiting for another participant...
+                Waiting for participant media...
               </div>
             </div>
           </div>
         )}
-        {isConnected && remoteVideoRef.current?.srcObject && (
-          <div className={styles.videoLabel}>Participant</div>
+        {showRemotePlaceholder && (
+            <div className={`${styles.placeholder} ${styles.remoteVideo}`}>
+                <MdVideocamOff size={48} />
+                <div className={styles.videoLabel}>{remoteUsername}</div>
+            </div>
+        )}
+        {showRemoteVideo && (
+          <div className={styles.videoLabel}>{remoteUsername}</div>
         )}
       </div>
-
     </div>
   );
 };

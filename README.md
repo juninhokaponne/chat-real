@@ -89,10 +89,18 @@ cd chat-real
 # 2. Install dependencies
 npm install
 
-# 3. Start development server
+# 3. Install Backend dependencies
+cd backend
+npm install
+
+#4. Start Backend Server
+node server.js
+cd ..
+
+# 5. Start development server
 npm run dev
 
-# 4. Open your browser
+# 6. Open your browser
 # http://localhost:5173
 ```
 
@@ -117,6 +125,7 @@ graph LR
 
 | Command | Description |
 |---------|-------------|
+| `node server.js` | Start backend server |
 | `npm run dev` | Start development server |
 | `npm run build` | Build for production |
 | `npm run preview` | Preview production build |
@@ -130,25 +139,27 @@ graph LR
 <div align="left">
 
 ```typescript
-src/
-├── 📁 components/          # React components
-│   ├── CameraTest/     # Camera/microphone testing
-│   ├── Controls/       # Video call controls
-│   ├── Header/         # Navigation header
-│   ├── Landing/        # Landing page
-│   ├── ShareButton/    # Room link sharing
-│   ├── VideoChat/      # Main video chat interface
-│   └── VideoContainer/ # Video display container
-├── 📁 hooks/              # Custom React hooks
-│   └── useVideoChat.ts # Video chat state management
-├── 📁 services/           # Business logic
-│   └── WebRTCService.ts # WebRTC implementation
-├── 📁 types/              # TypeScript type definitions
-├── 📁 utils/              # Utility functions
-│   └── roomUtils.ts    # Room ID generation
-├── App.tsx             # Main app component
-├── main.tsx           # App entry point
-└── index.css          # Global styles
+├── 📁 backend/                      
+│   └── 📄 server.js                  
+└── 📁 src/
+    ├── 📁 components/                  # React components
+    │   ├── 📁 CameraTest/              # Camera/microphone testing
+    │   ├── 📁 Controls/                 # Video call controls
+    │   ├── 📁 Header/                  # Navigation header
+    │   ├── 📁 Landing/                 # Landing page
+    │   ├── 📁 ShareButton/             # Room link sharing
+    │   ├── 📁 VideoChat/               # Main video chat interface
+    │   └── 📁 VideoContainer/          # Video display container
+    ├── 📁 hooks/                      # Custom React hooks
+    │   └── 📄 useVideoChat.ts        # Video chat state management 
+    ├── 📁 services/                   # Business logic
+    │   └── 📄 WebRTCService.ts         # WebRTC implementation
+    ├── 📁 types/                      # TypeScript type definitions
+    ├── 📁 utils/                      # Utility functions
+    │   └── 📄 roomUtils.ts            # Room ID generation 
+    ├── 📄 App.tsx                     # Main app component
+    ├── 📄 main.tsx                    # App entry point
+    └── 📄 index.css                   # Global styles
 ```
 
 </div>
@@ -216,6 +227,9 @@ VITE_TURN_PASSWORD=your-password
 # Optional: App configuration
 VITE_APP_NAME="Chat Real"
 VITE_APP_VERSION=1.0.0
+
+#Mandatory: 
+VITE_SOCKET_URL=your-backend-server || http://localhost:5000
 ```
 
 </div>
@@ -240,6 +254,25 @@ VITE_APP_VERSION=1.0.0
 </div>
 
 ## Deployment
+
+### Deploy to Render
+
+<div align="left">
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/your-username/chat-real)
+
+</div>
+
+<div align="left">
+
+1. **Click** the deploy button above
+2. **Connect** your GitHub repository
+3. **Render setup** (via their dashboard):
+     - Service Type: Web Service
+     - Root Directory: backend/ 
+     - Build Command: npm install 
+     - Start Command: node server.js
+4. **Deploy** automatically
 
 ### Deploy to Netlify
 
@@ -267,6 +300,7 @@ npm run build
 **Supported Platforms**:
 - Netlify
 - Vercel  
+- Render
 - GitHub Pages
 - Firebase Hosting
 - Any static hosting service

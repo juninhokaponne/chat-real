@@ -31,9 +31,12 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
     socket,
     username,
     webRTCService,
+    remoteStream,
+    remoteVideoEnabled,
+    remoteUsername
   } = useVideoChat(roomId);
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [_isChatOpen, setIsChatOpen] = useState(false);
   const toggleChat = () => setIsChatOpen(prev => !prev);
 
   const handleEndCall = () => {
@@ -105,6 +108,9 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
         isConnected={isConnected}
         isConnecting={isConnecting}
         mediaState={mediaState}
+        remoteStream={remoteStream}
+        remoteVideoEnabled={remoteVideoEnabled}
+        remoteUsername={remoteUsername}
       />
 
       <Controls
@@ -116,7 +122,7 @@ export const VideoChat = ({ roomId, onBackToLanding }: VideoChatProps) => {
         webRTC={webRTCService}
       />
 
-      {isChatOpen && socket && (
+      {socket && (
         <ChatPanel socket={socket} roomId={roomId} username={username || 'Guest'} />
       )}
     </div>
